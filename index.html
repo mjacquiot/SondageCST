@@ -1016,14 +1016,7 @@
       {
         title: 'Votre pôle / service', desc: 'Commençons par identifier votre rattachement.', questions: [
           {
-            id: 'service_pole', label: 'À quel pôle ou service êtes-vous rattaché(e) ?', type: 'radio_avec_autre', required: true, options: [
-              'Services Techniques (Bâtiments, Voirie, Espaces Verts, Déchets...)',
-              'Services Administratifs / Moyens Généraux (RH, Finances, Accueil...)',
-              'Pôle Petite Enfance / Scolaire / Social',
-              'Pôle Culture / Sport / Animation / Tourisme',
-              'Pôle Urbanisme / Développement territorial / Environnement',
-              'Autre'
-            ]
+            id: 'service_pole', label: 'À quel pôle ou service êtes-vous rattaché(e) ?', type: 'text', required: true
           }
         ]
       },
@@ -1165,9 +1158,14 @@
       if (currentStep < TOTAL_STEPS - 1) {
         const step = STEPS[currentStep];
         for (const q of step.questions) {
-          if (q.required && (q.type === 'radio' || q.type === 'radio_avec_autre')) {
-            const v = document.querySelector(`input[name="${q.id}"]:checked`);
-            if (!v) { toast('Veuillez répondre à la question obligatoire.', 'error'); return; }
+          if (q.required) {
+            if (q.type === 'radio' || q.type === 'radio_avec_autre') {
+              const v = document.querySelector(`input[name="${q.id}"]:checked`);
+              if (!v) { toast('Veuillez répondre à la question obligatoire.', 'error'); return; }
+            } else if (q.type === 'text') {
+              const el = document.querySelector(`textarea[name="${q.id}"]`);
+              if (!el || !el.value.trim()) { toast('Veuillez répondre à la question obligatoire.', 'error'); return; }
+            }
           }
         }
         showStep(currentStep + 1);
@@ -1207,7 +1205,7 @@
     /* Submit */
     async function submitSurvey() {
       const data = collectData();
-      if (!data.service_pole) { toast('Veuillez sélectionner votre pôle/service.', 'error'); return; }
+      if (!data.service_pole || !data.service_pole.trim()) { toast('Veuillez préciser votre pôle/service.', 'error'); return; }
       const btn = document.querySelector('.btn-success');
       btn.disabled = true; btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;margin:0;border-width:2px"></span> Envoi...';
       try {
