@@ -1029,7 +1029,8 @@
       },
       {
         title: 'II. Relations Direction & Élus', desc: 'Votre ressenti sur la communication et l\'écoute de votre hiérarchie.', questions: [
-          { id: 'satisfaction_direction', label: 'Êtes-vous satisfait de la communication et des réponses apportées par la Direction Générale (DGS/Direction) ?', type: 'radio', options: ['Très satisfait', 'Plutôt satisfait', 'Peu satisfait', 'Pas du tout satisfait'] },
+          { id: 'satisfaction_n1', label: 'Êtes-vous satisfait de la communication et des réponses apportées par votre hiérarchie directe (N+1) ?', type: 'radio', options: ['Très satisfait', 'Plutôt satisfait', 'Peu satisfait', 'Pas du tout satisfait'] },
+          { id: 'satisfaction_dgs', label: 'Êtes-vous satisfait de la communication et des réponses apportées par la Direction Générale (DGS) ?', type: 'radio', options: ['Très satisfait', 'Plutôt satisfait', 'Peu satisfait', 'Pas du tout satisfait'] },
           { id: 'elus_ecoute', label: 'Pensez-vous que les élus sont à l\'écoute des réalités de votre travail de terrain ?', type: 'radio', options: ['Oui, tout à fait', 'Partiellement', 'Non, pas du tout'] },
           { id: 'message_elus', label: 'Si vous aviez un message direct à faire passer aux élus concernant la gestion du personnel, quel serait-il ?', type: 'text' }
         ]
@@ -1311,8 +1312,8 @@
 
     function renderTable(c) {
       if (!allResponses.length) { c.innerHTML = '<div class="card" style="opacity:1;transform:none;text-align:center;padding:60px"><p style="color:var(--text-dim)">Aucune réponse pour le moment.</p></div>'; return; }
-      const cols = ['created_at', 'service_pole', 'bien_etre_general', 'ambiance_equipe', 'satisfaction_direction'];
-      let html = '<div class="table-wrap"><table><thead><tr><th>#</th><th>Date</th><th>Service</th><th>Bien-être</th><th>Ambiance</th><th>Direction</th><th>Actions</th></tr></thead><tbody>';
+      const cols = ['created_at', 'service_pole', 'bien_etre_general', 'ambiance_equipe', 'satisfaction_n1', 'satisfaction_dgs'];
+      let html = '<div class="table-wrap"><table><thead><tr><th>#</th><th>Date</th><th>Service</th><th>Bien-être</th><th>Ambiance</th><th>N+1</th><th>DGS</th><th>Actions</th></tr></thead><tbody>';
       allResponses.forEach((r, i) => {
         const d = new Date(r.created_at);
         html += `<tr>
@@ -1321,7 +1322,8 @@
       <td title="${r.service_pole}">${(r.service_pole || '').replace(/\(.*/, '').trim()}</td>
       <td>${r.bien_etre_general || '—'}</td>
       <td>${r.ambiance_equipe || '—'}/5</td>
-      <td>${r.satisfaction_direction || '—'}</td>
+      <td>${r.satisfaction_n1 || '—'}</td>
+      <td>${r.satisfaction_dgs || '—'}</td>
       <td style="display:flex;gap:6px"><button class="expand-btn" onclick="showDetail(${i})">Détail</button><button class="delete-btn" onclick="deleteResponse('${r.id}')" title="Supprimer">🗑</button></td>
     </tr>`;
       });
